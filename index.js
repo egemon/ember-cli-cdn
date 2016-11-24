@@ -43,8 +43,11 @@ module.exports = {
   treeFor: function(type) {
     var options = this.options,
       app = options.app;
-
-    if (type === 'vendor' && options.enabled) {
+    if  (type === 'vendor' && options.enabled) {
+      // fixed because vendorStaticStyles legacyFilesToAppend are 
+      // deprecated
+      app.vendorStaticStyles = app._styleOutputFiles['/assets/vendor.css'];
+      app.legacyFilesToAppend = app._scriptOutputFiles['/assets/vendor.js'];
       var patterns = _.pluck(options.cdnize, 'file'),
         extractedStyles = Util.extractItems(app.vendorStaticStyles, patterns),
         extractedScripts = Util.extractItems(app.legacyFilesToAppend, patterns);
@@ -55,8 +58,7 @@ module.exports = {
   contentFor: function (name) {
     var options = this.options,
       links;
-
-    if(options.enabled){
+    if (options.enabled){
       if(name === 'cdn-scripts'){
         links = Util.filterLinks(options.links, 'scripts');
       }
